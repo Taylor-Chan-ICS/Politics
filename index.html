@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科学发展观：政府工作报告主题演化 (2000-2015)</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #f8f9fa; margin: 0; padding: 40px; display: flex; flex-direction: column; align-items: center; }
+        h2 { color: #333; font-weight: 500; margin-bottom: 10px; }
+        p.subtitle { color: #666; font-size: 14px; margin-bottom: 30px; }
+        #chart-container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); position: relative; }
+        .line { fill: none; stroke-width: 3px; }
+        .axis-label { font-size: 12px; fill: #666; }
+        .grid line { stroke: #e0e0e0; stroke-dasharray: 4,4; stroke-opacity: 0.7; }
+        .grid path { stroke-width: 0; }
+        /* Tooltip 样式 */
+        .tooltip { position: absolute; text-align: left; padding: 10px; font-size: 13px; background: rgba(255, 255, 255, 0.95); border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); pointer-events: none; opacity: 0; transition: opacity 0.2s; }
+    </style>
+</head>
+<body>
+
+    <h2>政府工作报告核心主题演化趋势 (2000-2015)</h2>
+    <p class="subtitle">数据来源：2000-2015年政府工作报告文本 | 算法：BERTopic 动态主题模型</p>
+    
+    <div id="chart-container">
+        <div id="tooltip" class="tooltip"></div>
+    </div>
+
+    <script>
+        // 设置图表尺寸与边距
+        const margin = {top: 40, right: 150, bottom: 50, left: 50},
+              width = 900 - margin.left - margin.right,
+              height = 500 - margin.top - margin.bottom;
+
+        const svg = d3.select("#chart-container")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        const tooltip = d3.select("#tooltip");
+
+        // 加载 JSON 数据
+        d3.json("data.json").then(function(data) {
+            
+            // 解析 X 轴和 Y 轴的极值
+            const allYears = [];
+            const allFreqs = [];
+            data.forEach(d => {
+                d.values.forEach(v => {
+                    allYears.push(v.year);
+                    allFreqs.push(v.freq);
+                });
+            });
+
+            const x = d3.scaleLinear()
+                .domain(d3.extent(allYears))
+                .range([ 0, width ]);
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(allFreqs) * 1.1])
+                .range([ height, 0 ]);
+
+            // 学术风配色方案
+            const color = d3.scaleOrdinal()
+                .domain(data.map(d => d.name))
+                .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd"]);
+
+            // 添加网格线
+            svg.append("g").attr("class", "grid")
+               .attr("transform", `translate(0,${height})`)
+               .call(d3.axisBottom(x).ticks(8).tickSize(-height).tickFormat(""));
+            svg.append("g").attr("class", "grid")
+               .call(d3.axisLeft(y).ticks(5).tickSize(-width).tickFormat(""));
+
+            // 添加 X 轴与 Y 轴
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x).tickFormat(d3.format("d")).ticks(10))
+                .attr("font-size", "12px");
+
+            svg.append("g")
+                .call(d3.axisLeft(y).ticks(6))
+                .attr("font-size", "12px");
+
+            // 定义平滑曲线生成器
+            const line = d3.line()
+                .curve(d3.curveMonotoneX) // 平滑过渡
+                .x(d => x(d.year))
+                .y(d => y(d.freq));
+
+            // 绘制每条线
+            const lines = svg.selectAll(".line-group")
+                .data(data)
+                .join("g")
+                .attr("class", "line-group");
+
+            lines.append("path")
+                .attr("class", "line")
+                .attr("d", d => line(d.values))
+                .style("stroke", d => color(d.name))
+                .style("opacity", 0.8)
+                .on("mouseover", function(event, d) {
+                    d3.select(this).style("stroke-width", "5px").style("opacity", 1);
+                })
+                .on("mouseout", function(event, d) {
+                    d3.select(this).style("stroke-width", "3px").style("opacity", 0.8);
+                    tooltip.style("opacity", 0);
+                });
+
+            // 添加交互隐形数据点（用于触发 Tooltip）
+            lines.selectAll("circle")
+                .data(d => d.values.map(v => ({...v, name: d.name, color: color(d.name)})))
+                .join("circle")
+                .attr("cx", d => x(d.year))
+                .attr("cy", d => y(d.freq))
+                .attr("r", 5)
+                .style("fill", d => d.color)
+                .style("opacity", 0) // 默认隐藏，悬浮时触发外层组
+                .on("mouseover", function(event, d) {
+                    d3.select(this).style("opacity", 1);
+                    tooltip.style("opacity", 1)
+                        .html(`<strong style="color:${d.color}">${d.name}</strong><br>年份：${d.year}年<br>段落频次：${d.freq} 次`)
+                        .style("left", (event.pageX + 15) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function(event, d) {
+                    d3.select(this).style("opacity", 0);
+                    tooltip.style("opacity", 0);
+                });
+
+            // 在折线末端添加主题标签
+            lines.append("text")
+                .datum(d => { return {name: d.name, value: d.values[d.values.length - 1]}; })
+                .attr("transform", d => `translate(${x(d.value.year)},${y(d.value.freq)})`)
+                .attr("x", 8)
+                .attr("y", 3)
+                .text(d => d.name.split(":")[1]) // 只显示核心词
+                .style("fill", d => color(d.name))
+                .style("font-size", "12px")
+                .style("font-weight", "bold");
+        });
+    </script>
+</body>
+</html>
