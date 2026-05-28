@@ -3,145 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>科学发展观：政府工作报告主题演化 (2000-2015)</title>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #f8f9fa; margin: 0; padding: 40px; display: flex; flex-direction: column; align-items: center; }
-        h2 { color: #333; font-weight: 500; margin-bottom: 10px; }
-        p.subtitle { color: #666; font-size: 14px; margin-bottom: 30px; }
-        #chart-container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); position: relative; }
-        .line { fill: none; stroke-width: 3px; }
-        .axis-label { font-size: 12px; fill: #666; }
-        .grid line { stroke: #e0e0e0; stroke-dasharray: 4,4; stroke-opacity: 0.7; }
-        .grid path { stroke-width: 0; }
-        /* Tooltip 样式 */
-        .tooltip { position: absolute; text-align: left; padding: 10px; font-size: 13px; background: rgba(255, 255, 255, 0.95); border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); pointer-events: none; opacity: 0; transition: opacity 0.2s; }
-    </style>
+    <title>重返2003：星华市长执政模拟 - 科学发展观情景问卷</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="container">
+        <header class="header">
+            <div class="header-decoration"></div>
+            <h1 class="main-title">重返2003：星华市长执政模拟</h1>
+            <p class="subtitle">科学发展观科学内涵情景式问卷调查</p>
+        </header>
 
-    <h2>政府工作报告核心主题演化趋势 (2000-2015)</h2>
-    <p class="subtitle">数据来源：2000-2015年政府工作报告文本 | 算法：BERTopic 动态主题模型</p>
-    
-    <div id="chart-container">
-        <div id="tooltip" class="tooltip"></div>
+        <!-- 介绍页 -->
+        <section id="intro" class="section intro-section active">
+            <div class="card">
+                <h2 class="section-title">📋 问卷说明</h2>
+                <div class="intro-content">
+                    <p class="intro-text">你好！本问卷是《毛中特》课程展示的先导互动体验。</p>
+                    <p class="intro-text">时间拨回2003年。加入WTO后，你的城市"星华市"迎来了两位数增长机遇，但也面临着极其复杂的结构性矛盾。</p>
+                    <p class="intro-text">作为新任市长，你在任期内将面临 <strong>6项重大决策</strong>。以下所有选项在经济学或公共管理学中都有充分的理论支撑，且均被现实中的地方政府采用过。</p>
+                    <p class="intro-text highlight">请抛开"上帝视角"和"考试思维"，基于你对社会治理的真实理解，选择你认为效用最大化的方案。</p>
+                </div>
+                <button class="btn btn-primary" onclick="startQuestionnaire()">开始答题</button>
+            </div>
+        </section>
+
+        <!-- 关卡 1 -->
+        <section id="question1" class="section question-section">
+            <div class="card">
+                <div class="question-header">
+                    <span class="question-number">关卡 1/6</span>
+                    <h2 class="question-title">⏳ 上任的案头——危机的嗅觉</h2>
+                </div>
+                <div class="scenario">
+                    <p>上任第一天，你翻阅了全市近十年的统计年鉴。虽然GDP一路狂飙，但你敏锐地察觉到了繁荣背后隐藏的危机。</p>
+                    <p style="margin-top:10px;font-weight:600;">以下哪组数据指标的恶化，最让你感到如芒在背，认为必须立刻扭转局面？</p>
+                </div>
+                <div class="options">
+                    <label class="option-card">
+                        <input type="radio" name="q1" value="A">
+                        <div class="option-content">
+                            <div class="option-label">A. 【资本回报困境】</div>
+                            <div class="option-text">全市资本边际收益率持续下降。意味着每一单位的GDP增长，正被迫依赖越来越庞大的固定资产投资来强行拉动。</div>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="q1" value="B">
+                        <div class="option-content">
+                            <div class="option-label">B. 【社会二元断裂】</div>
+                            <div class="option-text">城乡居民收入差距迅速拉大至3:1以上，同时涉及土地征收、国企改制的群体性信访事件在近两年激增了40%。</div>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="q1" value="C">
+                        <div class="option-content">
+                            <div class="option-label">C. 【外部冲击脆弱性】</div>
+                            <div class="option-text">经济增长极度依赖外贸出口与外商直接投资（FDI），本土企业处于全球价值链最底端，极易被全球经济波动绞杀。</div>
+                        </div>
+                    </label>
+                </div>
+                <button class="btn btn-primary" onclick="nextQuestion(1)">下一题</button>
+            </div>
+        </section>
+
+        <!-- 关卡 2 -->
+        <section id="question2" class="section question-section">
+            <div class="card">
+                <div class="question-header">
+                    <span class="question-number">关卡 2/6</span>
+                    <h2 class="question-title">⏳ 第一份批文——增长路径的岔路口</h2>
+                </div>
+                <div class="scenario">
+                    <p>市里拿到了一批极具价值的工业用地指标。目前发改委给出了三个招商引资的方向，你会把土地优先批给谁？</p>
+                </div>
+                <div class="options">
+                    <label class="option-card">
+                        <input type="radio" name="q2" value="A">
+                        <div class="option-content">
+                            <div class="option-label">A. 【规模经济路线】</div>
+                            <div class="option-text">批给本地现有的龙头支柱产业（如传统重工）。通过土地补贴帮助其扩大产能，形成产业集聚效应，凭借规模优势迅速确立市场霸主地位。</div>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="q2" value="B">
+                        <div class="option-content">
+                            <div class="option-label">B. 【市场自发演进路线】</div>
+                            <div class="option-text">大幅降低所有企业的用地审批门槛和整体税负。不运用行政手段干预产业选择，让自由市场通过优胜劣汰自然筛选出最高效的企业。</div>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="q2" value="C">
+                        <div class="option-content">
+                            <div class="option-label">C. 【结构调整路线】</div>
+                            <div class="option-text">设立严苛的"亩均产值"和"能耗门槛"。宁可让土地闲置、忍受短期外资流失和GDP增速暂时下滑，也要把指标留给高新技术孵化器和产学研平台。</div>
+                        </div>
+                    </label>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="prevQuestion(2)">上一题</button>
+                    <button class="btn btn-primary" onclick="nextQuestion(2)">下一题</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关卡 3 -->
+        <section id="question3" class="section question-section">
+            <div class="card">
+                <div class="question-header">
+                    <span class="question-number">关卡 3/6</span>
+                    <h2 class="question-title">⏳ 岁末的决算——财政盈余的投向</h2>
+                </div>
+                <div class="scenario">
+                    <p>年底结算，市财政罕见地多出了20亿元的机动资金（属于一次性横财，明年未必有）。你会如何分配这笔钱？</p>
+                </div>
+                <div class="options">
+                    <label class="option-card">
+                        <input type="radio" name="q3" value="A">
+                        <div class="option-content">
+                            <div class="option-label">A. 【再分配兜底路线】</div>
+                            <div class="option-text">建立覆盖全市农村的新型合作医疗制度，扩大城市低保面。这笔钱投入后不仅没有经济乘数效应，且一旦确立福利标准，未来将形成刚性支出包袱。</div>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="q3" value="B">
+                        <div class="option-content">
+                            <div class="option-label">B. 【供给侧纾困路线】</div>
+                            <div class="option-text">设立"中小企业纾困与创新基金"。为全市民营企业提供定向贴息贷款，防止底层企业破产，并要求受助企业签署"不裁员承诺书"，以此间接保住就业岗位。</div>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="q3" value="C">
+                        <div class="option-content">
+                            <div class="option-label">C. 【人力资本路线】</div>
+                            <div class="option-text">启动"海聚工程"。用高额安家费引进国内外顶尖科研人才，并重金砸向市属大学重点学科建设，坚信顶尖人才是城市未来核心竞争力的唯一来源。</div>
+                        </div>
+                    </label>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="prevQuestion(3)">上一题</button>
+                    <button class="btn btn-primary" onclick="nextQuestion(3)">下一题</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关卡 4 -->
+        <section id="question4" class="section question-section">
+            <div class="card">
+                <div class="question-header">
+                    <span class="question-number">关卡 4/6</span>
+                    <h2 class="question-title">⏳ 城市的边缘——农民工的去留</h2>
+                </div>
+                <div class="scenario">
+                    <p>随着工业化推进，数十万农村劳动力涌入你的城市，蜗居在城中村。他们为城市建设流汗，但没有本地户口。为了城市的长期良性发展，你对这批人的态度是？</p>
+                </div>
+                <div class="options">
+                    <label class="option-card">
+                        <input type="radio" name="q4" value="A">
+                        <div class="option-content">
+                            <div class="option-label">A. 【空间过滤路线】</div>
+                            <div class="option-text">维持严格的户籍壁垒。利用较高的生活成本和严控公共服务供给，对人口进行"筛选"，防止低收入人群过度聚集形成拉美式贫民窟。</div>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="q4" value="B">
+                        <div class="option-content">
+                            <div class="option-label">B. 【土地城镇化路线】</div>
+                            <div class="option-text">推进激进的行政区划调整。大量撤县设区，征收周边农地建设大型工业园，让周边农民瞬间转为城市户口，迅速做大城市建成区面积。</div>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="q4" value="C">
+                        <div class="option-content">
+                            <div class="option-label">C. 【公共服务均等化路线】</div>
+                            <div class="option-text">逐步剥离附着在户籍上的福利特权。顶住巨大的地方财政压力，分步骤为外来务工人员的子女开放公立教育，并将其纳入城市基本医疗体系。</div>
+                        </div>
+                    </label>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="prevQuestion(4)">上一题</button>
+                    <button class="btn btn-primary" onclick="nextQuestion(4)">下一题</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关卡 5 -->
+        <section id="question5" class="section question-section">
+            <div class="card">
+                <div class="question-header">
+                    <span class="question-number">关卡 5/6</span>
+                    <h2 class="question-title">⏳ 资源与生态——跨区博弈</h2>
+                </div>
+                <div class="scenario">
+                    <p>全市最贫困的西部山区（全市水源涵养地）探明了高品位矿产。开采能让山区迅速脱贫，但会威胁下游主城区的饮水安全。你倾向于哪种空间治理方案？</p>
+                </div>
+                <div class="options">
+                    <label class="option-card">
+                        <input type="radio" name="q5" value="A">
+                        <div class="option-content">
+                            <div class="option-label">A. 【环境经济学路线】</div>
+                            <div class="option-text">允许开采，但引入"庇古税"。对矿企征收极其高昂的排污税，用市场机制迫使企业内化环境外部性成本，并将税收用于下游建设高级水质净化工程。</div>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="q5" value="B">
+                        <div class="option-content">
+                            <div class="option-label">B. 【主体功能区路线】</div>
+                            <div class="option-text">彻底禁采并划定生态红线。由享受了清洁水源的下游富裕城区，每年通过精确测算，向上游山区进行纯粹的"财政横向转移支付"，以弥补山区丧失的发展权。</div>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="q5" value="C">
+                        <div class="option-content">
+                            <div class="option-label">C. 【飞地经济路线】</div>
+                            <div class="option-text">实施行政创新。项目不在山区建，而是建在环保设施完善的下游工业区；但该项目产生的所有GDP和税收，在统计和分配时全部划归西部山区，实现"异地脱贫"。</div>
+                        </div>
+                    </label>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="prevQuestion(5)">上一题</button>
+                    <button class="btn btn-primary" onclick="nextQuestion(5)">下一题</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关卡 6 -->
+        <section id="question6" class="section question-section">
+            <div class="card">
+                <div class="question-header">
+                    <span class="question-number">关卡 6/6</span>
+                    <h2 class="question-title">⏳ 政策的落地——宏观与局部的权衡</h2>
+                </div>
+                <div class="scenario">
+                    <p>上级下达了"节能减排"硬指标，要求年内必须关停大批小煤窑。如果全部关停能瞬间达标，但会导致全市数万矿工短期内集体失业；如果不关，你将被严厉问责。你会怎么做？</p>
+                </div>
+                <div class="options">
+                    <label class="option-card">
+                        <input type="radio" name="q6" value="A">
+                        <div class="option-content">
+                            <div class="option-label">A. 【渐进式统筹路线】</div>
+                            <div class="option-text">拒绝一刀切。保留大矿、关停微矿，给中型矿产设立3年整改期。一边引入替代产业，一边分批消化失业人员。代价是第一年减排考核大概率不达标，面临上级通报批评。</div>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="q6" value="B">
+                        <div class="option-content">
+                            <div class="option-label">B. 【市场出清路线】</div>
+                            <div class="option-text">坚决关停。由市政府紧急发行一笔专项债券，给予失业矿工一次性、极其丰厚的"买断工龄"补偿，用高额的财政负债彻底消化掉短期的维稳压力。</div>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="q6" value="C">
+                        <div class="option-content">
+                            <div class="option-label">C. 【行政发包路线】</div>
+                            <div class="option-text">层层压实责任。将减排指标与维稳任务打包，分解下达给各区县一把手，实行"既要环保又要就业"的双重一票否决，由基层政府根据实际情况自行博弈求解。</div>
+                        </div>
+                    </label>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="prevQuestion(6)">上一题</button>
+                    <button class="btn btn-primary" onclick="submitQuestionnaire()">提交问卷</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 结果页 -->
+        <section id="results" class="section results-section">
+            <div class="card">
+                <h2 class="section-title">📊 执政决策分析报告</h2>
+                <div id="resultsContent"></div>
+                <div class="statistics-section">
+                    <h3 class="stats-title">全班答题分布统计</h3>
+                    <div id="statisticsContent"></div>
+                </div>
+                <button class="btn btn-primary" onclick="restartQuestionnaire()">重新答题</button>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>© 2026 毛泽东思想和中国特色社会主义理论体系概论课程 | 科学发展观教学互动平台</p>
+        </footer>
     </div>
 
-    <script>
-        // 设置图表尺寸与边距
-        const margin = {top: 40, right: 150, bottom: 50, left: 50},
-              width = 900 - margin.left - margin.right,
-              height = 500 - margin.top - margin.bottom;
-
-        const svg = d3.select("#chart-container")
-            .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`);
-
-        const tooltip = d3.select("#tooltip");
-
-        // 加载 JSON 数据
-        d3.json("data.json").then(function(data) {
-            
-            // 解析 X 轴和 Y 轴的极值
-            const allYears = [];
-            const allFreqs = [];
-            data.forEach(d => {
-                d.values.forEach(v => {
-                    allYears.push(v.year);
-                    allFreqs.push(v.freq);
-                });
-            });
-
-            const x = d3.scaleLinear()
-                .domain(d3.extent(allYears))
-                .range([ 0, width ]);
-
-            const y = d3.scaleLinear()
-                .domain([0, d3.max(allFreqs) * 1.1])
-                .range([ height, 0 ]);
-
-            // 学术风配色方案
-            const color = d3.scaleOrdinal()
-                .domain(data.map(d => d.name))
-                .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd"]);
-
-            // 添加网格线
-            svg.append("g").attr("class", "grid")
-               .attr("transform", `translate(0,${height})`)
-               .call(d3.axisBottom(x).ticks(8).tickSize(-height).tickFormat(""));
-            svg.append("g").attr("class", "grid")
-               .call(d3.axisLeft(y).ticks(5).tickSize(-width).tickFormat(""));
-
-            // 添加 X 轴与 Y 轴
-            svg.append("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x).tickFormat(d3.format("d")).ticks(10))
-                .attr("font-size", "12px");
-
-            svg.append("g")
-                .call(d3.axisLeft(y).ticks(6))
-                .attr("font-size", "12px");
-
-            // 定义平滑曲线生成器
-            const line = d3.line()
-                .curve(d3.curveMonotoneX) // 平滑过渡
-                .x(d => x(d.year))
-                .y(d => y(d.freq));
-
-            // 绘制每条线
-            const lines = svg.selectAll(".line-group")
-                .data(data)
-                .join("g")
-                .attr("class", "line-group");
-
-            lines.append("path")
-                .attr("class", "line")
-                .attr("d", d => line(d.values))
-                .style("stroke", d => color(d.name))
-                .style("opacity", 0.8)
-                .on("mouseover", function(event, d) {
-                    d3.select(this).style("stroke-width", "5px").style("opacity", 1);
-                })
-                .on("mouseout", function(event, d) {
-                    d3.select(this).style("stroke-width", "3px").style("opacity", 0.8);
-                    tooltip.style("opacity", 0);
-                });
-
-            // 添加交互隐形数据点（用于触发 Tooltip）
-            lines.selectAll("circle")
-                .data(d => d.values.map(v => ({...v, name: d.name, color: color(d.name)})))
-                .join("circle")
-                .attr("cx", d => x(d.year))
-                .attr("cy", d => y(d.freq))
-                .attr("r", 5)
-                .style("fill", d => d.color)
-                .style("opacity", 0) // 默认隐藏，悬浮时触发外层组
-                .on("mouseover", function(event, d) {
-                    d3.select(this).style("opacity", 1);
-                    tooltip.style("opacity", 1)
-                        .html(`<strong style="color:${d.color}">${d.name}</strong><br>年份：${d.year}年<br>段落频次：${d.freq} 次`)
-                        .style("left", (event.pageX + 15) + "px")
-                        .style("top", (event.pageY - 28) + "px");
-                })
-                .on("mouseout", function(event, d) {
-                    d3.select(this).style("opacity", 0);
-                    tooltip.style("opacity", 0);
-                });
-
-            // 在折线末端添加主题标签
-            lines.append("text")
-                .datum(d => { return {name: d.name, value: d.values[d.values.length - 1]}; })
-                .attr("transform", d => `translate(${x(d.value.year)},${y(d.value.freq)})`)
-                .attr("x", 8)
-                .attr("y", 3)
-                .text(d => d.name.split(":")[1]) // 只显示核心词
-                .style("fill", d => color(d.name))
-                .style("font-size", "12px")
-                .style("font-weight", "bold");
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
